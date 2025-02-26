@@ -47,10 +47,7 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
           email: data.email,
           phone_numbers: [data.phone],
           custom_fields: {
-            preferred_name: data.preferredName,
             linkedin_url: data.linkedinProfile,
-            gender: data.gender,
-            hispanic_latino: data.hispanicLatino
           }
         }
       }
@@ -114,19 +111,6 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
             />
           </div>
         </div>
-
-        <div className="grid gap-2">
-          <Label htmlFor="preferredName" className="text-zinc-700 dark:text-zinc-300">
-            Preferred Name
-          </Label>
-          <Input
-            {...register("preferredName")}
-            id="preferredName"
-            placeholder="Enter your preferred name (optional)"
-            className="bg-white dark:bg-zinc-900/50 border-zinc-200/80 dark:border-zinc-800/80"
-          />
-        </div>
-
         <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
             <Label htmlFor="phone" className="text-zinc-700 dark:text-zinc-300">
@@ -154,7 +138,7 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
           </div>
         </div>
 
-        {/* <div className="grid gap-2">
+        <div className="grid gap-2">
           <Label htmlFor="linkedin" className="text-zinc-700 dark:text-zinc-300">
             LinkedIn Profile
           </Label>
@@ -164,7 +148,7 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
             placeholder="Enter your LinkedIn profile URL"
             className="bg-white dark:bg-zinc-900/50 border-zinc-200/80 dark:border-zinc-800/80"
           />
-        </div> */}
+        </div>
 
         {/* <div className="grid gap-2">
           <Label htmlFor="resume" className="text-zinc-700 dark:text-zinc-300">
@@ -179,37 +163,6 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
           />
         </div> */}
 
-        {/* <div className="grid grid-cols-2 gap-4">
-          <div className="grid gap-2">
-            <Label htmlFor="gender" className="text-zinc-700 dark:text-zinc-300">
-              Gender
-            </Label>
-            <Select defaultValue={defaultValues?.gender}>
-              <SelectTrigger className="bg-white dark:bg-zinc-900/50">
-                <SelectValue placeholder="Select gender" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="hispanicLatino" className="text-zinc-700 dark:text-zinc-300">
-              Hispanic/Latino
-            </Label>
-            <Select defaultValue={defaultValues?.hispanicLatino}>
-              <SelectTrigger className="bg-white dark:bg-zinc-900/50">
-                <SelectValue placeholder="Select option" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="yes">Yes</SelectItem>
-                <SelectItem value="no">No</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div> */}
       </div>
 
       <div className="flex justify-end gap-4">
