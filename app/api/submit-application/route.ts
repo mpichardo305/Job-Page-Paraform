@@ -11,7 +11,41 @@ export async function POST(request: Request) {
   try {
     const applicationData = await request.json()
     
-    // Create the candidate
+    const requestBody: any = {
+      first_name: applicationData.candidate_information.first_name,
+      last_name: applicationData.candidate_information.last_name,
+      email_addresses: [
+        {
+          "value": applicationData.candidate_information.email,
+          "type": "work"
+        }
+      ],
+      phone_numbers: [
+        {
+          "value": applicationData.candidate_information.phone_numbers[0],
+          "type": "mobile"
+        }
+      ],
+      social_media_addresses: [
+        {
+          "value": applicationData.candidate_information.custom_fields.linkedin_url
+        }
+      ],
+      applications: [
+        {
+          "job_id": applicationData.job_id
+        }
+      ],
+    }
+    if (applicationData.attachment) {
+      requestBody.attachments = [{
+        filename: applicationData.attachment.filename,
+        type: applicationData.attachment.type,
+        content: applicationData.attachment.content,
+        content_type: applicationData.attachment.content_type
+      }]
+    }
+
     const candidateResponse = await fetch(
       'https://harvest.greenhouse.io/v1/candidates',
       {
@@ -21,39 +55,7 @@ export async function POST(request: Request) {
           'Authorization': `Basic ${Buffer.from('f06b2b153e016f8e7c3632627af56b1d-7:').toString('base64')}`,
           'On-Behalf-Of': '4280249007'
         },
-        body: JSON.stringify({
-          first_name: applicationData.candidate_information.first_name,
-          last_name: applicationData.candidate_information.last_name,
-          email_addresses: [
-            {
-              "value": applicationData.candidate_information.email,
-              "type": "work"
-            }
-          ],
-          phone_numbers: [
-            {
-              "value": applicationData.candidate_information.phone_numbers,
-              "type": "mobile"
-            }
-          ],
-          social_media_addresses: [
-            {
-                "value": applicationData.candidate_information.custom_fields.linkedin_url
-            }
-        ],
-        attachments: [
-          {
-              "filename": "John_Locke_Offer_Packet_09_27_2017.pdf",
-              "url": "https://prod-heroku.s3.amazonaws.com/",
-              "type": "offer_packet",
-              "created_at": "2020-09-27T18:45:27.137Z"
-          }
-      ],
-          applications: [{
-            "job_id": applicationData.job_id
-          }
-        ]
-        })
+        body: JSON.stringify(requestBody)
       }
     )
 
@@ -68,7 +70,6 @@ export async function POST(request: Request) {
       )
     }
 
-    // Return only candidate data
     return NextResponse.json({
       id: candidateData.id,
       first_name: candidateData.first_name,
