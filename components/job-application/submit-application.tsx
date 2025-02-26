@@ -12,7 +12,6 @@ interface FormData {
   phone: string
   email: string
   linkedinProfile?: string
-  resume?: FileList
   gender?: string
   hispanicLatino?: string
 }
@@ -25,7 +24,6 @@ interface JobApplicationFormProps {
     phone: string
     email: string
     linkedinProfile?: string
-    resume?: FileList
     gender?: string
     hispanicLatino?: string
   }
@@ -40,42 +38,24 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true)
     try {
-      // Convert resume to base64 if provided
-      let resumeAttachment = undefined
-      if (data.resume?.[0]) {
-        const base64Resume = await new Promise((resolve, reject) => {
-          const reader = new FileReader()
-          reader.readAsDataURL(data.resume![0])
-          reader.onload = () => resolve(reader.result)
-          reader.onerror = error => reject(error)
-        })
-        
-        resumeAttachment = {
-          filename: data.resume[0].name,
-          type: "resume",
-          content: (base64Resume as string).split(',')[1],
-          content_type: data.resume[0].type
-        }
-      }
-
-      // Prepare application payload
+      // Prepare application payload to match Greenhouse API format
       const applicationData = {
-        prospect: false,
-        job_id: 4285367007,
-        source_id: 7,
-        attachments: resumeAttachment ? [resumeAttachment] : undefined,
-        custom_fields: {
+        job_id: 4285367007,           // Your specific job ID
+        candidate_information: {       // Add candidate info as metadata
           first_name: data.firstName,
           last_name: data.lastName,
           email: data.email,
-          phone: data.phone,
-          preferred_name: data.preferredName,
-          linkedin_url: data.linkedinProfile,
-          gender: data.gender,
-          hispanic_latino: data.hispanicLatino
+          phone_numbers: [data.phone],
+          custom_fields: {
+            preferred_name: data.preferredName,
+            linkedin_url: data.linkedinProfile,
+            gender: data.gender,
+            hispanic_latino: data.hispanicLatino
+          }
         }
       }
 
+      console.log("Submitting payload:", JSON.stringify(applicationData, null, 2));
       const response = await fetch('/api/submit-application', {
         method: 'POST',
         headers: {
@@ -186,7 +166,7 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
           />
         </div> */}
 
-        <div className="grid gap-2">
+        {/* <div className="grid gap-2">
           <Label htmlFor="resume" className="text-zinc-700 dark:text-zinc-300">
             Resume
           </Label>
@@ -197,7 +177,7 @@ export default function JobApplicationForm({ defaultValues }: JobApplicationForm
             accept=".pdf,.doc,.docx"
             className="bg-white dark:bg-zinc-900/50 border-zinc-200/80 dark:border-zinc-800/80"
           />
-        </div>
+        </div> */}
 
         {/* <div className="grid grid-cols-2 gap-4">
           <div className="grid gap-2">
